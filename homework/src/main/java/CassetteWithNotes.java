@@ -3,30 +3,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CassetteWithNotes {
-   private  final HashMap<Integer, Integer> hashMapCassette = new HashMap<>();
+public class CassetteWithNotes implements Command {
 
+    private final HashMap<Integer, Integer> hashMapCassette = new HashMap<>();
 
-   public  void loadNotes(int nominal, int quantity){
-      this.hashMapCassette.put(nominal, quantity);
-   }
-
-
-  public boolean checkAmountAvailable(int amount){
-      int value = 0;
-      int nominal = 0;
-      int totalSumma = 0;
-      for (Map.Entry entry: hashMapCassette.entrySet()) {
-         nominal = (int) entry.getKey();
-         value = value + (int) entry.getValue();
-         totalSumma = totalSumma + (nominal * value);
-      }
-      if (totalSumma >= amount) return true;
-       else return  false;
-  }
-
-
-    public Map<Integer,Integer>   withdraw(int expectedAmount){
+    @Override
+    public Map<Integer, Integer> withdraw(int expectedAmount) {
         Map<Integer, Integer> map = new HashMap<>();
         ArrayList<Integer> list = new ArrayList<>(hashMapCassette.keySet());
         Collections.sort(list);
@@ -39,8 +21,7 @@ public class CassetteWithNotes {
                 if (hashMapCassette.get(integer) >= x) {
                     map.put(integer, x);
                     expectedAmount -= integer * x;
-                }
-                else {
+                } else {
                     map.put(integer, hashMapCassette.get(integer));
                     expectedAmount -= hashMapCassette.get(integer) * integer;
                 }
@@ -61,10 +42,13 @@ public class CassetteWithNotes {
 
     }
 
-
-    public void deposit(String nominal, int amount) {
-
+    @Override
+    public void loadNotes(int nominal, int quantity) {
+        this.hashMapCassette.put(nominal, quantity);
     }
 
-
+    @Override
+    public String deposit(int nominal, Integer amount) {
+        return null;
+    }
 }

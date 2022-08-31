@@ -1,28 +1,30 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class CassetteWithAcceptedNotes {
+public class CassetteWithAcceptedNotes implements Command{
 
-    private  final HashMap<Integer, Integer> hashMapCassetteWithAcceptedNotes = new HashMap<>();
+    private  final Deque<Deposit> listCassetteWithAcceptedNotes = new ArrayDeque<Deposit>() ;
 
-    public  String deposit (Integer nominal, Integer amount){
 
-        if (!hashMapCassetteWithAcceptedNotes.isEmpty()) {
-            for (Map.Entry entry : hashMapCassetteWithAcceptedNotes.entrySet()) {
-               int key = (int) entry.getKey();
-                if ( key == nominal) {
 
-                    hashMapCassetteWithAcceptedNotes.put((Integer) entry.getKey(), amount + (Integer) entry.getValue());
-                }
 
-            }
-        }else hashMapCassetteWithAcceptedNotes.put(nominal, amount);
-             String str = "Deposit " + amount * nominal;
-             return str  ;
+    @Override
+    public Map<Integer, Integer> withdraw(int expectedAmount) {
+
+        return null;
     }
 
-
+    @Override
     public void loadNotes(int nominal, int quantity) {
 
     }
+
+    @Override
+    public String deposit(int nominal, Integer amount) {
+        listCassetteWithAcceptedNotes.add(new Deposit(nominal, amount));
+
+        String str = "Deposit " + amount * nominal;
+        return str  ;
+    }
+
+
 }
