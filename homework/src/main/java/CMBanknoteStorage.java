@@ -2,43 +2,35 @@ import java.util.*;
 // Класс реализует интерфейс BanknoteStorage в соответствии с принципами SOLID
 public class CMBanknoteStorage implements BanknoteStorage {
 
-    private Map<Integer, Integer> cashStorage;
+    private Map<Denomination, BanknoteCell> cells;
 
-public CMBanknoteStorage(){
-        cashStorage = new HashMap<>();
-        initializeCashStorage();
-    }
-
-    private void initializeCashStorage() {
-        int[] denominations = new int[]{50, 100, 200, 500, 1000, 2000, 5000};
-        for (int denomination : denominations) {
-            cashStorage.put(denomination, 0);
+    public CMBanknoteStorage() {
+        cells = new HashMap<>();
+        for (Denomination denomination : Denomination.values()) {
+            cells.put(denomination, new BanknoteCell(denomination, 0));
         }
     }
 
     @Override
-    public void deposit(int denomination, int quantity) {
-        cashStorage.put(denomination, cashStorage.get(denomination) + quantity);
+    public void deposit(Denomination denomination, int quantity) {
+        BanknoteCell cell = cells.get(denomination);
+        cell.deposit(quantity);
     }
 
     @Override
-    public int withdraw(int denomination, int quantity) throws Exception {
-        int availableQuantity = cashStorage.get(denomination);
-        if (availableQuantity < quantity) {
-            throw new Exception("Недостаточное количество банкнот данного номинала");
-        }
-
-        cashStorage.put(denomination, availableQuantity - quantity);
-        return quantity;
+    public int withdraw(Denomination denomination, int quantity) {
+        BanknoteCell cell = cells.get(denomination);
+        return cell.withdraw(quantity);
     }
 
     @Override
-    public int getBanknoteQuantity(int denomination) {
-        return cashStorage.get(denomination);
-    }
-    @Override
-    public Set<Integer> getAvailableDenominations() {
-        return cashStorage.keySet();
+    public int getBanknoteQuantity(Denomination denomination) {
+        BanknoteCell cell = cells.get(denomination);
+        return cell.getQuantity();
     }
 
+    @Override
+    public Set<Denomination> getAvailableDenominations() {
+        return EnumSet.allOf(Denomination.class);
+    }
 }
